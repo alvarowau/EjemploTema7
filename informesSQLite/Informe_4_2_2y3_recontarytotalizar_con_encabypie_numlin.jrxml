@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Listado_clientes" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="80519013-e829-455c-9670-01cdd8b95d61">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SQLitefabrica"/>
+	<queryString language="SQL">
+		<![CDATA[Select nombre as Cliente, count(id_pedido) as Npedidos from pedidos, clientes where pedidos.ID_Cliente = clientes.ID_Cliente group by pedidos.ID_Cliente]]>
+	</queryString>
+	<field name="Cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cliente"/>
+	</field>
+	<field name="Npedidos" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Ciudad"/>
+	</field>
+	<sortField name="Cliente"/>
+	<variable name="Npedidos1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Npedidos}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="-10" width="520" height="30" forecolor="#1525D6" backcolor="#6EE09C" uuid="03d3220e-ff1e-4384-bfce-bc59895fa199"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número de pedidos efectuados por cada cliente]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement x="20" y="0" width="100" height="30" uuid="c4efc479-077f-4873-842e-93ffa294e5fe"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Zaxeboa]]></text>
+			</staticText>
+			<textField pattern="d  &apos; de &apos; MMMM &apos; del &apos; yyyy">
+				<reportElement x="350" y="0" width="200" height="30" uuid="b8836224-beb0-46df-aebf-2d15c784e868"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="0" width="475" height="30" backcolor="#A8E6C0" uuid="7ee359fc-aa12-49bc-b330-e66b3a037313"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="90" y="6" width="290" height="20" uuid="79848e41-ec56-43c9-9246-3f59d6c4051d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8b9fd76a-bb2f-4886-9dc9-f883594716b1"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="6" width="100" height="20" uuid="bd52fc7d-3fde-484f-9f1a-5764e04c52a7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="da625a17-1e6b-4aa6-bf4a-2ce302cdec07"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pedidos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="6" width="85" height="20" uuid="0300a656-24ed-49b3-8c25-cb575ee53506">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8b9fd76a-bb2f-4886-9dc9-f883594716b1"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Num.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="90" y="0" width="290" height="20" uuid="8626f8aa-f848-4e9a-b2ab-3d24e8fc0483">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8b9fd76a-bb2f-4886-9dc9-f883594716b1"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+					<paragraph leftIndent="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="100" height="20" uuid="39657f91-05d2-4dd2-abea-c2b6c24c893d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="da625a17-1e6b-4aa6-bf4a-2ce302cdec07"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Npedidos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="0" width="85" height="20" uuid="55d7513d-7739-4cb1-80ad-a9afd9931978"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="100" y="10" width="230" height="30" uuid="19c27149-f752-45ac-827d-55a7a915a421"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="0" width="135" height="30" uuid="169c1075-60a1-4d65-9e10-2abcb59028e0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de pedidos]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="240" y="0" width="100" height="30" uuid="aef4fb38-7c14-4873-a945-fc92506d7c90"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Npedidos1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

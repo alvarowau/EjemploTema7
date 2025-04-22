@@ -1,0 +1,20 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: fabrica-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: fabrica
+      MYSQL_USER: luis
+      MYSQL_PASSWORD: Brianda20
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./modelos:/docker-entrypoint-initdb.d  # Montamos la carpeta 'modelos'
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  mysql_data:

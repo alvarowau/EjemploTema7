@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>EjemploTema7</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>Fabrica.jrdax</name>
+			<type>1</type>
+			<location>/home/luis/Dropbox/Instituto/DI/Clase/Tema5/Tarea5_1/Fabrica.jrdax</location>
+		</link>
+	</linkedResources>
+</projectDescription>
