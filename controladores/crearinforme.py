@@ -3,6 +3,18 @@ import pyreportjasper
 
 
 def compiling():
+    """
+    Compila un archivo JRXML a un archivo Jasper.
+
+    Esta función busca el archivo 'Agrupamiento.jrxml' dentro de la carpeta 'informes'
+    y lo compila utilizando la biblioteca pyreportjasper.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     input_file = os.path.join(os.path.dirname(__file__), '..', 'informes', 'Agrupamiento.jrxml')
     jasper = pyreportjasper.PyReportJasper()
     jasper.config(input_file)
@@ -10,6 +22,18 @@ def compiling():
 
 
 def processing():
+    """
+    Procesa un archivo JRXML y genera archivos PDF y RTF.
+
+    Esta función busca el archivo 'Agrupamiento.jrxml' en la carpeta 'informes' y lo procesa
+    generando un archivo PDF y RTF en la misma carpeta.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     input_file = os.path.join(os.path.dirname(__file__), '..', 'informes', 'Agrupamiento.jrxml')
     output = os.path.join(os.path.dirname(__file__), '..', 'informes', 'pdf')
 
@@ -22,6 +46,18 @@ def processing():
 
 
 def listing_parameters():
+    """
+    Lista los parámetros de un informe JRXML.
+
+    Esta función busca el archivo 'Listado_clientes_param_filtrado.jrxml' en la carpeta 'informes'
+    y lista los parámetros asociados a ese archivo.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     input_file = os.path.join(os.path.dirname(__file__), '..', 'informes', 'Listado_clientes_param_filtrado.jrxml')
     jasper = pyreportjasper.PyReportJasper()
     jasper.config(input_file=input_file)
@@ -30,6 +66,18 @@ def listing_parameters():
 
 
 def xml_to_pdf():
+    """
+    Convierte un archivo XML a PDF utilizando un archivo JRXML.
+
+    Esta función utiliza el archivo 'CancelAck.jrxml' y 'CancelAck.xml' para generar un archivo PDF
+    en la carpeta 'output'.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     base_path = os.path.join(os.path.dirname(__file__), '..')
     input_file = os.path.join(base_path, 'examples', 'CancelAck.jrxml')
     output = os.path.join(base_path, 'output', '_CancelAck')
@@ -55,6 +103,18 @@ def xml_to_pdf():
 
 
 def json_to_pdf():
+    """
+    Convierte un archivo JSON a PDF utilizando un archivo JRXML.
+
+    Esta función utiliza el archivo 'json.jrxml' y 'contacts.json' para generar un archivo PDF
+    en la carpeta 'output'.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     base_path = os.path.join(os.path.dirname(__file__), '..')
     input_file = os.path.join(base_path, 'examples', 'json.jrxml')
     output = os.path.join(base_path, 'output', '_Contacts')
@@ -82,8 +142,13 @@ def buscar_logo():
     """
     Busca un archivo de imagen llamado 'logo.png' dentro de una carpeta llamada 'img'
     en cualquier parte del proyecto. Retorna la ruta absoluta si se encuentra.
+
+    Args:
+        None
+
+    Returns:
+        str: La ruta absoluta del archivo 'logo.png', o None si no se encuentra.
     """
-    print('Buscando logo.png')
     nombre_archivo = 'logo.png'
     carpeta_base = 'img'
 
@@ -96,6 +161,20 @@ def buscar_logo():
 
 
 def advanced_example_using_database(fichero_entrada, fichero_salida, parametros):
+    """
+    Procesa un archivo JRXML utilizando una base de datos MySQL y parámetros proporcionados.
+
+    Esta función procesa el archivo JRXML de entrada utilizando los parámetros proporcionados,
+    incluyendo una conexión a una base de datos MySQL y un posible archivo de logo.
+
+    Args:
+        fichero_entrada (str): La ruta al archivo JRXML de entrada.
+        fichero_salida (str): La ruta al archivo de salida.
+        parametros (dict): Un diccionario con los parámetros para el informe.
+
+    Returns:
+        None
+    """
     input_file = os.path.abspath(fichero_entrada)
     output_file = os.path.abspath(fichero_salida)
 

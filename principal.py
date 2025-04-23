@@ -1,33 +1,54 @@
 import sys
 
 from PySide6.QtWidgets import QWidget, QApplication, QMessageBox, QLineEdit
-# Asegúrate de que el archivo vistas/style.py contiene la variable style_sheet
-
 
 from vistas.ui_geninformes import Ui_Form
 
-# Asegúrate de que tus controladores existen y son correctos
-# from controladores import crearinforme # Si usas esto en MiApp, impórtalo aquí
-
-
 class MiApp(QWidget, Ui_Form):
+    """
+    Clase principal de la aplicación, que hereda de QWidget y Ui_Form.
+
+    Esta clase inicializa la interfaz de usuario definida en 'ui_geninformes' y establece
+    los elementos gráficos necesarios para la aplicación.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
 
     def __init__(self):
+        """
+        Inicializa la clase MiApp y configura la interfaz de usuario.
+
+        Configura la interfaz utilizando el método 'setupUi' de la clase Ui_Form y muestra
+        el formulario principal.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         super().__init__()
-        # setupUi se encarga de configurar la interfaz definida en ui_geninformes.py
         self.setupUi(self)
 
 
-
-
-    # Si los métodos como generar_informe, cambiar_ruta, aviso, etc. están definidos en tu clase MiApp
-    # deben estar aquí dentro.
-
-
 if __name__ == "__main__":
+    """
+    Punto de entrada principal para ejecutar la aplicación.
+
+    Crea una instancia de la clase MiApp, la muestra en pantalla y ejecuta el ciclo
+    de eventos de la aplicación.
+
+    Args:
+        None
+
+    Returns:
+        int: El código de salida de la aplicación.
+    """
     app = QApplication(sys.argv)
-
-
 
     mi_app = MiApp()
     mi_app.show()

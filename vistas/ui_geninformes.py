@@ -11,150 +11,202 @@ from controladores import crearinforme
 
 
 class Ui_Form(object):
+    """Interfaz gráfica para la generación de informes a partir de archivos .jrxml."""
+
     def setupUi(self, Form):
+        """Configura los componentes de la interfaz de usuario.
+
+        Args:
+            Form (QWidget): Widget principal donde se añadirán los componentes.
+        """
         if not Form.objectName():
             Form.setObjectName(u"Form")
         Form.resize(400, 300)
+
         self.btnGenInforme = QPushButton(Form)
         self.btnGenInforme.setObjectName(u"btnGenInforme")
         self.btnGenInforme.setGeometry(QRect(270, 100, 111, 23))
+
         self.comboBoxFicheros = QComboBox(Form)
         self.comboBoxFicheros.setObjectName(u"comboBoxFicheros")
         self.comboBoxFicheros.setGeometry(QRect(20, 100, 231, 23))
+
         self.cdrTxtRutaSalida = QLineEdit(Form)
         self.cdrTxtRutaSalida.setObjectName(u"cdrTxtRuta")
         self.cdrTxtRutaSalida.setGeometry(QRect(40, 180, 281, 23))
+
         self.cdrTxtRutaEntrada = QLineEdit(Form)
         self.cdrTxtRutaEntrada.setObjectName(u"cdrTxtRuta_2")
         self.cdrTxtRutaEntrada.setGeometry(QRect(20, 40, 281, 23))
+
         ruta_base = os.getcwd()
         self.cdrTxtRutaEntrada.setText(ruta_base)
         self.cdrTxtRutaSalida.setText(ruta_base)
+
         self.retranslateUi(Form)
-        # Conectar la señal de Enter para actualizar la lista
+
+        # Conexiones de señales
         self.cdrTxtRutaEntrada.returnPressed.connect(self.cambiar_ruta)
         self.btnGenInforme.clicked.connect(self.generar_informe)
 
-        # Conectar clics del ratón para abrir explorador
+        # Sobrescritura de eventos
         self.cdrTxtRutaEntrada.mousePressEvent = self.abrir_explorador_ruta_entrada
         self.cdrTxtRutaSalida.mousePressEvent = self.abrir_explorador_ruta_salida
 
-        # Cargar la lista inicial al iniciar la interfaz
+        # Carga inicial de ficheros
         try:
-            # self.comboBoxFicheros.addItems(os.listdir(self.cdrTxtRutaEntrada.text())) # Línea original
-             self.cambiar_ruta() # Llamamos a cambiar_ruta para cargar y filtrar
+            items = [f for f in os.listdir(self.cdrTxtRutaEntrada.text()) if f.endswith('.jrxml')]
+            items.sort()
+            self.comboBoxFicheros.addItems(items)
         except FileNotFoundError:
             self.aviso("Aviso ruta de entrada", "Indica la ruta de los ficheros jrxml")
-
+        except Exception as e:
+            self.aviso("Error inicial", f"Ocurrió un error al cargar la lista de archivos: {e}")
 
     def retranslateUi(self, Form):
+        """Configura los textos traducibles de la interfaz.
+
+        Args:
+            Form (QWidget): Widget principal cuya interfaz se va a traducir.
+        """
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Generar Informes Fábrica", None))
         self.btnGenInforme.setText(QCoreApplication.translate("Form", u"Generar Informe", None))
         self.cdrTxtRutaSalida.setPlaceholderText(QCoreApplication.translate("Form", u"Ruta ficheros generados", None))
         self.cdrTxtRutaEntrada.setPlaceholderText(QCoreApplication.translate("Form", u"Ruta ficheros jrxml", None))
         self.cdrTxtRutaEntrada.setToolTip(QCoreApplication.translate("Form", u"Pulsar enter para actualizar la lista de ficheros", None))
 
-
     def abrir_explorador_ruta_entrada(self, event):
-        ruta = QFileDialog.getExistingDirectory(None, "Selecciona la carpeta de los ficheros jrxml", self.cdrTxtRutaEntrada.text() if os.path.exists(self.cdrTxtRutaEntrada.text()) else os.getcwd())
+        """Abre un diálogo para seleccionar la ruta de entrada de archivos .jrxml.
+
+        Args:
+            event: Evento de mouse que disparó la acción.
+        """
+        ruta = QFileDialog.getExistingDirectory(
+            None,
+            "Selecciona la carpeta de los ficheros jrxml",
+            self.cdrTxtRutaEntrada.text()
+        )
         if ruta:
             self.cdrTxtRutaEntrada.setText(ruta)
-            self.cambiar_ruta() # Actualizar lista después de seleccionar la ruta
+            self.cambiar_ruta()
 
     def abrir_explorador_ruta_salida(self, event):
-        ruta = QFileDialog.getExistingDirectory(None, "Selecciona la carpeta de destino para los PDF", self.cdrTxtRutaSalida.text() if os.path.exists(self.cdrTxtRutaSalida.text()) else os.getcwd())
+        """Abre un diálogo para seleccionar la ruta de salida de los informes.
+
+        Args:
+            event: Evento de mouse que disparó la acción.
+        """
+        ruta = QFileDialog.getExistingDirectory(
+            None,
+            "Selecciona la carpeta de destino para los PDF",
+            self.cdrTxtRutaSalida.text()
+        )
         if ruta:
             self.cdrTxtRutaSalida.setText(ruta)
 
-
     def aviso(self, titulo, texto):
+        """Muestra un mensaje de aviso al usuario.
+
+        Args:
+            titulo (str): Título del diálogo.
+            texto (str): Contenido del mensaje.
+        """
         dialogo = QMessageBox(self)
         dialogo.setWindowTitle(titulo)
         dialogo.setText(texto)
         dialogo.exec()
 
     def pedir_parametros(self, pLista):
-        # Asegúrate de que pLista no esté vacío antes de usar QInputDialog
-        if not pLista:
-            self.aviso("Error de Parámetros", "No hay parámetros definidos para este informe.")
-            return None # O manejar el caso de lista vacía según necesites
+        """Solicita parámetros al usuario mediante un diálogo.
 
-        pTitulo = "Parámetros"
-        pTexto = "Selecciona el parámetro:" # Texto más claro para el usuario
-        sel, conf = QInputDialog.getItem(self, pTitulo, pTexto, pLista, 0, False) # Añadido índice inicial y no editable
-        if conf:
-            return sel
-        return None # Retornar None si el usuario cancela
+        Args:
+            pLista (list|str): Lista de opciones o texto de prompt.
 
-    def error(self, pLista): # Esta función parece incompleta o un placeholder
-        print("Función de error llamada con:", pLista)
-        return "" # Retorna un valor por defecto, revisa si esto es lo esperado
+        Returns:
+            str|None: Valor introducido por el usuario o None si canceló.
+        """
+        pTitulo = "Parámetro Requerido"
+        pTexto = "Introduce el valor para el parámetro:"
 
+        if isinstance(pLista, list) and pLista:
+            pTexto = "Selecciona un valor de la lista:"
+            sel, conf = QInputDialog.getItem(self, pTitulo, pTexto, pLista, 0, False)
+            return sel if conf else None
+        else:
+            prompt_texto = str(pLista) if isinstance(pLista, str) and pLista else pTexto
+            text, conf = QInputDialog.getText(self, pTitulo, prompt_texto)
+            return text if conf else None
+
+    def error(self, pLista):
+        """Función placeholder para manejo de errores.
+
+        Args:
+            pLista: Parámetro no utilizado.
+
+        Returns:
+            str: Cadena vacía.
+        """
+        return ""
 
     def generar_informe(self):
-        # Diccionario de configuración de parámetros por nombre de fichero (sin extensión)
-        # Para 'clientes' se espera el parámetro 'param_cliente' y se usa pedir_parametros sin lista inicial (se debería pasar la lista real de clientes)
-        # Para otros ficheros, si no están en este diccionario, no se pedirán parámetros y se usará un diccionario vacío {}
-        configuracion_parametros = {
-            'InformeAlbaranesSinSubinformeSQL': {'param_cliente': (self.pedir_parametros, ["Cliente1", "Cliente2", "Cliente3"])}, # Ejemplo: pasar lista real de clientes
-            # Añade aquí otros informes que requieran parámetros y sus configuraciones
-            # 'OtroInformeConParametro': {'nombre_parametro': (self.pedir_parametros, ["ValorA", "ValorB"])}
+        """Genera un informe PDF a partir del archivo .jrxml seleccionado."""
+        sel_param = {
+            'Informe_4_1_1_1_parametro_texto': ('Comentario', self.pedir_parametros, ""),
+            'Informe_4_1_1_filtrado_datos': ('Ciudad', self.pedir_parametros,
+                                             ['Almendralejo', 'Cáceres', 'Madrid', 'Salamanca', 'Santander', 'Sevilla']),
+            'Informe_4_1_1_ordenar_datos': ('Orden', self.pedir_parametros,
+                                           ['Ciudad', 'Direccion', 'Nombre']),
+            'Informe_4_7_1_Graficos': ('Titulo', self.pedir_parametros, ""),
+            'Informe_4_5_1_InformePrincipal': ('Titulo', self.pedir_parametros, ""),
+            'clientes':('param_cliente', self.pedir_parametros, ""),
         }
+        mens_error_param_info = ("", self.error, "")
 
+        selected_jrxml = self.comboBoxFicheros.currentText()
+        if not selected_jrxml:
+            self.aviso("Error", "No hay archivo JRXML seleccionado en la lista.")
+            return
 
-        ficheroEntrada = os.path.join(self.cdrTxtRutaEntrada.text(), self.comboBoxFicheros.currentText())
-        # Asegurarse de que la ruta de salida existe o usar la de entrada
-        rutaSalida = self.cdrTxtRutaSalida.text()
-        if not os.path.exists(rutaSalida):
-             self.aviso("Atención", f"El directorio de salida '{rutaSalida}' no existe.\nLos informes se generarán en el directorio de entrada.")
-             rutaSalida = self.cdrTxtRutaEntrada.text()
+        ficheroEntrada = os.path.join(self.cdrTxtRutaEntrada.text(), selected_jrxml)
+        ficheroSalidaBase = os.path.splitext(selected_jrxml)[0]
+        ficheroSalida = os.path.join(self.cdrTxtRutaSalida.text(), ficheroSalidaBase)
 
-        # Generar el nombre del fichero de salida (sin extensión jrxml, con extensión pdf)
-        nombre_fichero_salida_base, _ = os.path.splitext(self.comboBoxFicheros.currentText())
-        ficheroSalida = os.path.join(rutaSalida, nombre_fichero_salida_base + ".pdf")
+        if not os.path.exists(self.cdrTxtRutaSalida.text()):
+            self.aviso("Atención", f"El directorio de salida no existe. Usando directorio de entrada.")
+            ficheroSalida = os.path.join(self.cdrTxtRutaEntrada.text(), ficheroSalidaBase)
 
+        fichero_sel_base = os.path.splitext(selected_jrxml)[0]
+        param_info = sel_param.get(fichero_sel_base, mens_error_param_info)
 
-        fichero_sel_base = os.path.splitext(self.comboBoxFicheros.currentText())[0] # Nombre del fichero sin extensión
+        param_name = param_info[0]
+        param_dialog_func = param_info[1]
+        param_list_or_prompt = param_info[2]
 
-        # Obtener la configuración de parámetros para el fichero seleccionado
-        params_info = configuracion_parametros.get(fichero_sel_base, {}) # Usa diccionario vacío si no hay config
-
-        parametros_a_enviar = {}
-        for param_nombre, (metodo_pedir, lista_valores) in params_info.items():
-             valor_param = metodo_pedir(lista_valores) # Llama al método para pedir el valor
-             if valor_param is not None: # Solo añade el parámetro si el usuario no canceló
-                 parametros_a_enviar[param_nombre] = valor_param
+        parametros = {}
+        if param_name:
+             param_value = param_dialog_func(param_list_or_prompt)
+             if param_value is not None:
+                 parametros[param_name] = param_value
              else:
-                 # Si un parámetro requerido es cancelado, podrías querer abortar la generación
-                 self.aviso("Generación Cancelada", f"El valor para el parámetro '{param_nombre}' no fue proporcionado.")
-                 return # Aborta la función generar_informe
+                 self.aviso("Cancelado", "Generación cancelada por el usuario.")
+                 return
 
-
-        # Asegúrate de que crearinforme.advanced_example_using_database pueda manejar un diccionario vacío de parámetros
         try:
-            crearinforme.advanced_example_using_database(ficheroEntrada, ficheroSalida, parametros_a_enviar)
-            self.aviso("Informe Generado", f"El informe '{os.path.basename(ficheroSalida)}' ha sido generado con éxito.")
+            crearinforme.advanced_example_using_database(ficheroEntrada, ficheroSalida, parametros)
+            self.aviso("Éxito", f"Informe generado en: {ficheroSalida}.pdf")
         except Exception as e:
-            self.aviso("Error al Generar Informe", f"Ocurrió un error: {e}")
-
+            self.aviso("Error", f"Error al generar el informe: {e}")
 
     def cambiar_ruta(self):
+        """Actualiza la lista de archivos .jrxml cuando cambia la ruta de entrada."""
         try:
             self.comboBoxFicheros.clear()
-            ruta_entrada = self.cdrTxtRutaEntrada.text()
-            if os.path.exists(ruta_entrada) and os.path.isdir(ruta_entrada):
-                items = os.listdir(ruta_entrada)
-                # Filtrar solo archivos con extensión .jrxml
-                ficheros_jrxml = [item for item in items if item.lower().endswith('.jrxml') and os.path.isfile(os.path.join(ruta_entrada, item))]
-                ficheros_jrxml.sort() # Ordenar alfabéticamente
-                self.comboBoxFicheros.addItems(ficheros_jrxml)
-            else:
-                 # Manejar caso de ruta no válida o no es un directorio
-                 self.aviso("Ruta no válida", f"La ruta especificada '{ruta_entrada}' no es un directorio válido.")
-                 self.comboBoxFicheros.clear() # Asegurarse de que la lista está vacía si la ruta es inválida
-
-        except Exception as e:
-            # Captura cualquier otra excepción (permisos, etc.)
-            self.aviso("Error al cambiar ruta", f"Ocurrió un error al listar ficheros: {e}")
+            items = [f for f in os.listdir(self.cdrTxtRutaEntrada.text()) if f.endswith('.jrxml')]
+            items.sort()
+            self.comboBoxFicheros.addItems(items)
+        except FileNotFoundError:
+            self.aviso("Error", f"Directorio no encontrado: {self.cdrTxtRutaEntrada.text()}")
             self.comboBoxFicheros.clear()
-
+        except Exception as e:
+            self.aviso("Error", f"Error al cargar archivos: {e}")
+            self.comboBoxFicheros.clear()
