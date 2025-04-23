@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.20.6  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Informe_GraficoVentas" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="70e5c261-291b-4682-be65-da326118b491">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="AdaptadorFabrica"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[SELECT
+    c.Nombre AS Cliente,
+    MONTHNAME(p.Fecha_Pedido) AS Mes,
+    COUNT(*) AS NumeroArticulos
+FROM
+    clientes c
+JOIN
+    pedidos p ON c.ID_Cliente = p.ID_Cliente
+JOIN
+    detalle_pedidos dp ON p.ID_Pedido = dp.ID_Pedido
+GROUP BY
+    p.Fecha_Pedido, c.Nombre
+ORDER BY
+   MONTH(p.Fecha_Pedido), c.Nombre;]]>
+	</queryString>
+	<field name="Cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="Cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+	</field>
+	<field name="Mes" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Mes"/>
+		<property name="com.jaspersoft.studio.field.label" value="Mes"/>
+	</field>
+	<field name="NumeroArticulos" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="NumeroArticulos"/>
+		<property name="com.jaspersoft.studio.field.label" value="NumeroArticulos"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="140" splitType="Stretch">
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="460" y="0" width="100" height="30" uuid="c674b3c2-9ed7-44e0-b71b-6fda89ed6271"/>
+				<textElement textAlignment="Right">
+					<font size="9" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Documento generado: "+new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="50" width="300" height="50" uuid="dd30d1c2-c7cc-42e5-895e-fa2ea6e8dbfe"/>
+				<textElement textAlignment="Center">
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESUMEN DE VENTAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="90" width="200" height="30" uuid="f908f845-489a-4efb-83d6-819c12258b6a"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[SumiMetálicos, S.L. ]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="80" height="80" uuid="7766a7cb-91cd-4ee4-b075-0d7fa0f66394"/>
+				<imageExpression><![CDATA["https://logonoid.com/images/thumbs/planet-express-logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="280" splitType="Stretch">
+			<staticText>
+				<reportElement x="3" y="10" width="554" height="40" uuid="b38fcdc0-b57a-4794-b20f-e4833caaceda"/>
+				<textElement>
+					<font size="12" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[El siguiente gráfico de barras representa el total de unidades vendidas por cada cliente, agrupado por mes.]]></text>
+			</staticText>
+			<barChart>
+				<chart evaluationTime="Report">
+					<reportElement x="0" y="60" width="554" height="220" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="1c63c338-070b-4599-bc50-4c140bd8bf44"/>
+					<chartTitle color="#030303">
+						<font size="14" isBold="true"/>
+						<titleExpression><![CDATA["ARTICULOS VENDIDOS"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend textColor="#030303" backgroundColor="#FFFFFF"/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{Cliente}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{Mes}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{NumeroArticulos}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot backcolor="#FFFFFF">
+						<seriesColor seriesOrder="0" color="#424FFF"/>
+						<seriesColor seriesOrder="1" color="#FF4050"/>
+						<seriesColor seriesOrder="2" color="#FF5CF4"/>
+						<seriesColor seriesOrder="3" color="#7987D0"/>
+						<seriesColor seriesOrder="4" color="#B5BE1B"/>
+						<seriesColor seriesOrder="5" color="#2C8E0B"/>
+					</plot>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" verticalTickLabels="false" axisLineColor="#030303"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" verticalTickLabels="true" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="97">
+			<rectangle>
+				<reportElement x="0" y="8" width="554" height="82" forecolor="#D6DB48" backcolor="#FAFCE3" uuid="59c93143-e3fa-431b-9ca3-57890d0db715"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="10" width="120" height="19" uuid="78dbd115-fed6-44a2-91c9-9d34dbc1924b"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Observaciones:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="29" width="541" height="51" uuid="bcc00d94-bb45-4ba5-83ab-69bd80c2ed03"/>
+				<text><![CDATA[La información presentada se obtiene directamente de la base de datos y no ha sido sometida a tratamientos o análisis posteriores.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<pageFooter>
+		<band height="50">
+			<textField>
+				<reportElement x="180" y="15" width="100" height="20" forecolor="#4F4F4F" uuid="57a58cc2-cb4e-4b06-a2ba-17ec3e887db8"/>
+				<textElement textAlignment="Right">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="15" width="100" height="20" forecolor="#4F4F4F" uuid="b276c868-e30d-411c-bb44-b04c7e9fcfeb"/>
+				<textElement textAlignment="Left">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
